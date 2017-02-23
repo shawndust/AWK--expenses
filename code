@@ -1,0 +1,63 @@
+#Opening gawk statement, declares field separator to be a comma.
+BEGIN { FS=","; }; 
+{
+	#Figure out the sum of all checks.  Determine this by checking if the
+	#check number field is not empty.  If not, add the amount to a total.
+if ( $1 != "" )
+  s+=$6;
+  
+	#Determine the sum of all debit purchases.  This is determined by 
+	#testing if the check number field is empty.  If so, add the amount
+	#to the sum.
+if ( $1 == "" )
+  t+=$6;
+  
+  
+	#Find the sum of expenses per type, by examining the 4th field in
+	#each record.  Then, add in the total to that given category.
+categ_array1[$4]+=$6;
+
+
+	#Find the sum of expenses per month, by examining the 6th field in
+	#each record.  Then, add that amount to the given month sum.
+categ_array[$2]+=$6;
+
+
+
+} 
+
+	
+END {
+	
+	#Print the header for the program
+	print "Check and Debits"
+	
+	printf "Checks : \t %8.2f\n", s
+	
+	#Do the same for the debits total
+	printf "Debits : \t %8.2f\n", t
+
+	#Show the expenses categories
+	print "\nExpenses by Category"
+	
+	#Print in neat format the category, followed by a right-justified
+	#dollar amount for each.
+for (var in categ_array1)
+		printf "%-10s \t %8.2f\n", var, categ_array1[var]
+		
+	#Show the expenses by month header
+print "\nExpenses by Month"
+
+
+	#create an array called a that holds the months indexed to their number.
+split("January,February,March,April,May,June,July,August,September,October,November,December", a, ",", seps)
+
+	#Neatly print out the month name and then a right-justified dollar
+	#amount for the months.
+	for ( i = 1; i <= 12; ++i )
+		printf "%-10s \t %8.2f\n", a[i], categ_array[a[i]]
+		
+
+	
+	
+	}
